@@ -1,9 +1,10 @@
-import { BaseEntity, Column, Generated, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, Generated, JoinTable, ManyToMany, PrimaryColumn, PrimaryGeneratedColumn, Table } from "typeorm";
+import Language from "./Language";
 
+@Entity()
 export default class User extends BaseEntity {
 
-	@PrimaryGeneratedColumn()
-	@Generated("uuid")
+	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
 	@Column({ type: "varchar", length: 64 })
@@ -15,16 +16,32 @@ export default class User extends BaseEntity {
 	@Column({ type: "text" })
 	password: string;
 
-	@Column({ type: "varchar", nullable: true })
+	@Column({ nullable: true })
 	github: string;
 
-	@Column({ type: "varchar", nullable: true })
+	@Column({ nullable: true })
 	twitter: string;
 
-	@Column({ type: "varchar", nullable: true })
+	@Column({ nullable: true })
 	facebook: string;
 
-	@Column({ type: "varchar", nullable: true })
+	@Column({ nullable: true })
 	discord: string;
 
+	@Column({ nullable: true })
+	linkedIn: string;
+
+	@Column("text")
+	skill: Skill;
+
+	@ManyToMany(type => Language, language => language.users)
+	@JoinTable()
+	languages: Language[];
+
+}
+
+export enum Skill {
+	BEGINNER,
+	INTERMEDIATE,
+	ADVANCED
 }
