@@ -2,7 +2,8 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "ES6",
-		"experimentalDecorators": true
+		"experimentalDecorators": true,
+		"outDir": "./out"
 	},
 	"exclude": [
 		"node_modules"

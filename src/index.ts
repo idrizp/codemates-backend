@@ -12,7 +12,7 @@ import { createConnection, Connection } from "typeorm";
 			type: "postgres",
 			url: process.env.POSTGRES_URL
 		});
-
+		
 		const app = express();
 		app.use(helmet());
 		app.use(cors());
