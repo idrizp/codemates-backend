@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import User, { Skill } from "../entity/User";
 import * as argon2 from "argon2";
 import * as jwt from "jsonwebtoken";
-import Language from "../entity/Language";
+import { Collection, Db, MongoClient } from "mongodb";
 
 const INVALID_CREDENTIALS = { error: "Invalid credentials." };
 export default class AuthController {
@@ -11,7 +11,7 @@ export default class AuthController {
 		return jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "30m" });
 	}
 
-	static register() {
+	static register(collection: Collection) {
 		// TODO: We should really type check these! Good thing this is for a hackathon though.
 		type RegisterRequestBody = {
 			username: string;
@@ -34,10 +34,10 @@ export default class AuthController {
 				return;
 			}
 
-			let existing = await User.findOne({ username: body.username });
+			let existing = await collection.findOne({ username: body.username });
 			let emailTaken = false;
 			if (!existing) {
-				existing = await User.findOne({email: body.email});
+				existing = await collection.findOne({email: body.email});
 				if (existing) emailTaken = true;
 			}
 			if (existing) {
@@ -51,6 +51,7 @@ export default class AuthController {
 			user.password = (await argon2.hash(body.password)).toString()
 			user.email = body.email;
 			user.skill = body.skill;
+			user.languages = body.languages;
 
 			if (body.twitter) {
 				user.twitter = body.twitter;
@@ -72,33 +73,12 @@ export default class AuthController {
 				user.linkedIn = body.linkedIn;
 			}
 
-			user.languages = [];
-
-			const foundLanguages: Promise<Language>[] = [];
-			for (let languageName of body.languages) {
-				foundLanguages.push(
-					(async () => {
-						let language = await Language.findOne({ name: languageName.toLowerCase() });
-						if (!language) {
-							language = new Language();
-							language.name = languageName;
-							await language.save();
-						}
-						return language;
-					})()
-				);
-			}
-
-			const loaded = await Promise.all(foundLanguages);
-			for (let result of loaded) {
-				user.languages.push(result);
-			}
-			user.save();
+			collection.insertOne(user);
 			res.status(200).json({ token: this.createToken(user) });
 		}
 	}
 
-	static logIn() {
+	static logIn(collection: Collection) {
 		type LogInRequestBody = {
 			username: string;
 			password: string;
@@ -110,7 +90,7 @@ export default class AuthController {
 				return;
 			}
 
-			const user = await User.findOne({ username: body.username as string });
+			const user: User | undefined = await collection.findOne({ username: body.username as string });
 			if (!user) {
 				res.status(401).json(INVALID_CREDENTIALS);
 				return;
