@@ -26,4 +26,6 @@ import { createConnection, Connection } from "typeorm";
 	} catch (err) {
 		throw err;
 	}
-})();
+})().catch(err => {
+	throw err;
+});
