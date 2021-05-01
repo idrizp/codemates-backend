@@ -6,7 +6,7 @@
 
 <p align="center">This is a web app which specicfically focuses on the connections of Devs across the world.</p>
 
-## Structure-FrontEnd
+## Structure-BackEnd
 
 |  Stacks                                       |      Description                |
 | :-------------------                          | :-------------------:           |
