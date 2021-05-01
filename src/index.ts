@@ -12,6 +12,7 @@ import AuthController from "./controller/auth-controller";
 import MatchController from "./controller/match-controller";
 import authenticatedOnly from "./middleware/auth-middleware";
 import { Server } from "socket.io";
+import UserController from "./controller/user-controller";
 
 (async () => {
 	try {
@@ -41,6 +42,7 @@ import { Server } from "socket.io";
 		app.use(express.urlencoded({ extended: true }));
 
 		app.get("/api/match", authenticatedOnly(usersCollection), MatchController.matchUsers(usersCollection));
+		app.get("/api/profile", authenticatedOnly(usersCollection), UserController.getProfile(usersCollection));
 		app.post("/api/login", AuthController.logIn(usersCollection));
 		app.post("/api/register", AuthController.register(usersCollection));
 		
