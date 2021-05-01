@@ -1,5 +1,8 @@
-export default class Game {
+import GameManager from "./game-manager";
+import * as socket from "socket.io";
 
+export default class Game {
+	
 	private wins: Map<string, Challenge[]> = new Map();
 	private submitted: Set<string> = new Set();
 
@@ -7,6 +10,7 @@ export default class Game {
 	public currentChallenge: Challenge | undefined;
 
 	constructor(
+		public gameManager: GameManager,
 		public id: string,
 		public challenger: string,
 		public challenged: string,
@@ -22,6 +26,7 @@ export default class Game {
 		if (this.submitted.has(this.challenged)) {
 			this.wins.get(this.challenged).push(this.currentChallenge);
 		}
+		this.submitted.clear();
 		this.currentChallenge = challenge;
 	}
 
@@ -43,6 +48,24 @@ export default class Game {
 		return this.challenged;
 	}
 
+	/**
+	 * Submits a response to the current challenge.
+	 * @param user The user
+	 * @param value The submitted value.
+	 * @returns Whether or not the value was submitted.
+	 */
+	submitResponse(user: string, value: any): boolean {
+		if (this.currentChallenge === undefined) return false;
+		if (value !== this.currentChallenge.requiredOutput) return false;
+		this.submitted.add(user);
+		this.wins.get(user).push(this.currentChallenge);
+		return false;
+	}
+
+	onEnd() {
+		this.gameManager.removeGame(this.id);
+	}
+
 }
 
 export class Challenge {
@@ -50,6 +73,7 @@ export class Challenge {
 		public id: string,
 		public title: string,
 		public description: string,
-		public time: number
+		public time: number,
+		public requiredOutput: any
 	) {}
 }
