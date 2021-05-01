@@ -35,7 +35,7 @@ export default function authenticatedOnly(collection: Collection) {
 }
 
 export function authenticatedOnlySocket(collection: Collection) {
-	return async (socket: Socket, next) => {
+	return async (socket: Socket, next: any) => {
 		const token = socket.handshake.auth.token;
 		if (!token) {
 			next(new Error("Provide an authentication token."));
