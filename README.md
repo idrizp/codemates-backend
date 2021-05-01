@@ -14,4 +14,3 @@
 |  [SocketIO](https://socket.io/)               |                                 |
 |  [TypeScript](https://www.typescriptlang.org/)|                                 |  
 |  [MongoDB](https://www.mongodb.com/)          |                                 |
-|  [TypeORM](https://typeorm.io/#/)             |                                 |
