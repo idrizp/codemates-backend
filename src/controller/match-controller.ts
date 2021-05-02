@@ -120,9 +120,7 @@ export default class MatchController {
 				languages: {
 					$in: [...user.languages]
 				}
-			})
-			.skip((page - 1) * 10)
-			.limit(10);
+			});
 			
 			const matchedUsers = await matched.toArray()
 			res.status(200).json({
