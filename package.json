@@ -4,8 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && node out/index.js",
-    "migrate": "node ./node_modules/typeorm/cli.js migration:run"
+    "start": "node out/index.js",
+    "postinstall": "tsc"
   },
   "dependencies": {
     "argon2": "^0.27.2",
