@@ -14,7 +14,7 @@ export default class MatchController {
 				id: req.params.user,
 				skill: user.skill,
 				languages: {
-					$in: user.languages
+					$in: [...user.languages]
 				} 
 			});
 			if (!target) {
@@ -118,7 +118,7 @@ export default class MatchController {
 					$eq: user.skill
 				},
 				languages: {
-					$in: user.languages
+					$in: [...user.languages]
 				}
 			})
 			.skip((page - 1) * 10)
