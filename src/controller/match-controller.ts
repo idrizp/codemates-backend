@@ -10,6 +10,10 @@ export default class MatchController {
 	static addFriend(userCollection: Collection) {
 		return async (req: Request, res: Response) => {
 			const user: User = req["user"];
+			if (user.friends.includes(req.params.user)) {
+				res.status(400).json({ error: "You already have that user friended." });
+				return;
+			}
 			const target: User | undefined = await userCollection.findOne({ 
 				id: req.params.user,
 				skill: user.skill,
