@@ -134,7 +134,9 @@ export default class MatchController {
 			
 			const matchedUsers = await matched.toArray()
 			res.status(200).json({
-				users: matchedUsers.map(found => {
+				users: matchedUsers
+				.filter(found => !user.friends.includes(found.id))
+				.map(found => {
 					delete found.password;
 					delete found.email;
 					delete found["_id"];
