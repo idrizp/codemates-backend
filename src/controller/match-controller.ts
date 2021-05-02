@@ -103,7 +103,13 @@ export default class MatchController {
 	static getFriends(userCollection: Collection) {
 		return async (req: Request, res: Response) => {
 			const user: User = req["user"];
-			res.status(200).json({ friends: user.friends });
+			const friends: User[] = await Promise.all(user.friends.map(async friend => await userCollection.findOne({ id: friend })));
+			res.status(200).json({ friends: friends.map(friend => {
+				delete friend["_id"];
+				delete friend.password;
+				delete friend.email;
+				return friend;
+			})});
 		}
 	}
 

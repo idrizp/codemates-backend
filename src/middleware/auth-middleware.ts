@@ -6,7 +6,7 @@ import User from "../entity/User";
 
 export default function authenticatedOnly(collection: Collection) {
 	return async (req: Request, res: Response, next: NextFunction) => {
-		const authorization = req.headers["authorization"];
+		const authorization: string | undefined = req.headers["authorization"];
 		if (!authorization) {
 			res.status(401).json({ error: "Unauthorized." });
 			return;

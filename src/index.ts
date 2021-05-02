@@ -45,9 +45,9 @@ import SocketController from "./controller/socket/socket-controller";
 		app.use(express.json());
 		app.use(express.urlencoded({ extended: true }));
 
-		app.post("/api/match/{user}/invite", authenticatedOnly(userCollection), MatchController.invite(userCollection, inviteCollection));
-		app.post("/api/match/{invite}/accept", authenticatedOnly(userCollection), MatchController.acceptInvite(userCollection, inviteCollection, socketController));
-		app.post("/api/match/friend/{user}", authenticatedOnly(userCollection), MatchController.addFriend(userCollection));
+		app.post("/api/match/:user/invite", authenticatedOnly(userCollection), MatchController.invite(userCollection, inviteCollection));
+		app.post("/api/match/:invite/accept", authenticatedOnly(userCollection), MatchController.acceptInvite(userCollection, inviteCollection, socketController));
+		app.post("/api/match/friend/:user", authenticatedOnly(userCollection), MatchController.addFriend(userCollection));
 		app.get("/api/match/friends", authenticatedOnly(userCollection), MatchController.getFriends(userCollection));
 		app.get("/api/match", authenticatedOnly(userCollection), MatchController.matchUsers(userCollection));
 		app.get("/api/profile", authenticatedOnly(userCollection), UserController.getProfile(userCollection));
