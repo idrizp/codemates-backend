@@ -11,7 +11,9 @@ export default class User {
 		public discord: string = "",
 		public linkedIn: string = "",
 		public skill: Skill = Skill.BEGINNER,
-		public languages: string[] = []) {
+		public languages: string[] = [],
+		public friends: string[] = []
+		) {
 	}
 }
 

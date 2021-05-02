@@ -7,6 +7,25 @@ import SocketController from "./socket/socket-controller";
 
 export default class MatchController {
 
+	static addFriend(userCollection: Collection) {
+		return async (req: Request, res: Response) => {
+			const user: User = req["user"];
+			const target: User | undefined = await userCollection.findOne({ 
+				id: req.params.user,
+				skill: user.skill,
+				languages: {
+					$in: user.languages
+				} 
+			});
+			if (!target) {
+				res.status(404).json({ error: "User not found. You can only be friends with people in your skillset." });
+				return;
+			}
+			userCollection.updateOne({ id: user.id }, { $push: { friends: target.id }});
+			res.status(200).json({ friend: target.id });
+		}
+	}
+
 	static invite(userCollection: Collection, inviteCollection: Collection) {
 		return async (req: Request, res: Response) => {
 			const inviter: User = req["user"];
@@ -74,6 +93,13 @@ export default class MatchController {
 			}
 
 			// TODO: Start game
+		}
+	}
+
+	static getFriends(userCollection: Collection) {
+		return async (req: Request, res: Response) => {
+			const user: User = req["user"];
+			res.status(200).json({ friends: user.friends });
 		}
 	}
 
